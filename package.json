@@ -1,0 +1,27 @@
+{
+  "name": "local-gemini-app",
+  "version": "1.0.0",
+  "description": "Local Gemini app using Vercel AI SDK with Express backend and Alpine.js SPA",
+  "type": "module",
+  "scripts": {
+    "cli": "node index.js",
+    "server": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "gemini",
+    "ai-sdk",
+    "local"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.80",
+    "ai": "^6.0.193",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "google-auth-library": "^10.6.2",
+    "nodemailer": "^8.0.10",
+    "xoauth2": "^1.2.0"
+  }
+}

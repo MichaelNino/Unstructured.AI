@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Data_Dump>
+    <Person>
+        <fname>Alice
+(extra)</fname>
+        <Last-Name>Brown</Last-Name>
+        <dob>04/26/1972</dob>
+        <ContactInfo>
+            <email>alice@example.com</email>
+            <phone>301-5566</phone>
+        </ContactInfo>
+    </Person>
+    <Record1>
+        <Name>
+            <first>Bob</first>
+            <last>Anderson</last>
+        </Name>
+        <dob>07/25/1956</dob>
+        <ContactInfo>
+            <email>bob@example.com</email>
+            <phone>135-4161</phone>
+        </ContactInfo>
+    </Record1>
+</Data_Dump>

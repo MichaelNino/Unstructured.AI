@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Unstructured.AI - Data Format Converter</title>
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='20' y='10' width='60' height='50' rx='5' fill='%233b82f6' stroke='%231e40af' stroke-width='2'/><rect x='30' y='20' width='12' height='12' rx='2' fill='%23dbeafe'/><rect x='58' y='20' width='12' height='12' rx='2' fill='%23dbeafe'/><rect x='42' y='35' width='16' height='8' rx='2' fill='%231e40af'/><line x1='15' y1='50' x2='30' y2='65' stroke='%233b82f6' stroke-width='3' stroke-linecap='round'/><line x1='85' y1='50' x2='70' y2='65' stroke='%233b82f6' stroke-width='3' stroke-linecap='round'/><line x1='30' y1='65' x2='30' y2='85' stroke='%233b82f6' stroke-width='3' stroke-linecap='round'/><line x1='70' y1='65' x2='70' y2='85' stroke='%233b82f6' stroke-width='3' stroke-linecap='round'/></svg>"
+        />
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+        ></script>
+        <style>
+            :root {
+                color-scheme: light dark;
+                font-family: system-ui, sans-serif;
+                line-height: 1.5;
+            }
+            body {
+                margin: 0;
+                min-height: 100vh;
+                background: #0f1419;
+                color: #e7ecf3;
+            }
+            main {
+                max-width: 42rem;
+                margin: 0 auto;
+                padding: 2rem 1rem 3rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+                margin: 0 0 0.25rem;
+                color: #3b82f6;
+            }
+            .subtitle {
+                color: #9aa8b8;
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+            label {
+                display: block;
+                font-size: 0.85rem;
+                color: #9aa8b8;
+                margin-bottom: 0.35rem;
+            }
+            textarea {
+                width: 100%;
+                min-height: 6rem;
+                box-sizing: border-box;
+                padding: 0.75rem;
+                border: 1px solid #2a3544;
+                border-radius: 8px;
+                background: #1a2330;
+                color: inherit;
+                font: inherit;
+                resize: vertical;
+            }
+            button {
+                margin-top: 0.75rem;
+                padding: 0.6rem 1.1rem;
+                border: none;
+                border-radius: 8px;
+                background: #3b82f6;
+                color: #fff;
+                font: inherit;
+                cursor: pointer;
+            }
+            button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .output {
+                margin-top: 1.5rem;
+                padding: 1rem;
+                border-radius: 8px;
+                background: #1a2330;
+                border: 1px solid #2a3544;
+                white-space: pre-wrap;
+                min-height: 4rem;
+                max-height: 60vh;
+                overflow: auto;
+                word-break: break-word;
+            }
+            .error {
+                color: #f87171;
+                margin-top: 0.75rem;
+                font-size: 0.9rem;
+            }
+            .status {
+                font-size: 0.8rem;
+                color: #6b7c90;
+                margin-top: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <main x-data="chatApp()" x-init="checkHealth()">
+            <h1>
+                <svg
+                    style="
+                        display: inline;
+                        width: 1em;
+                        height: 1em;
+                        margin-right: 0.3em;
+                        vertical-align: -0.125em;
+                    "
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 100 100"
+                >
+                    <rect
+                        x="20"
+                        y="10"
+                        width="60"
+                        height="50"
+                        rx="5"
+                        fill="currentColor"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <rect
+                        x="30"
+                        y="20"
+                        width="12"
+                        height="12"
+                        rx="2"
+                        fill="%23e7ecf3"
+                    />
+                    <rect
+                        x="58"
+                        y="20"
+                        width="12"
+                        height="12"
+                        rx="2"
+                        fill="%23e7ecf3"
+                    />
+                    <rect
+                        x="42"
+                        y="35"
+                        width="16"
+                        height="8"
+                        rx="2"
+                        fill="%23e7ecf3"
+                    />
+                    <line
+                        x1="15"
+                        y1="50"
+                        x2="30"
+                        y2="65"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+                    <line
+                        x1="85"
+                        y1="50"
+                        x2="70"
+                        y2="65"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+                    <line
+                        x1="30"
+                        y1="65"
+                        x2="30"
+                        y2="85"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+                    <line
+                        x1="70"
+                        y1="65"
+                        x2="70"
+                        y2="85"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    /></svg
+                >Unstructured.AI - Data Format Converter
+            </h1>
+            <p class="subtitle">
+                Paste messy JSON, XML, or CSV and describe the target format
+                (e.g. &quot;convert this CSV to JSON&quot;).
+            </p>
+
+            <label for="prompt">Conversion request and data</label>
+            <textarea
+                id="prompt"
+                x-model="prompt"
+                placeholder="Enter your conversion source format and target format followed by source data here."
+                :disabled="loading"
+            ></textarea>
+
+            <label for="email">Email (optional)</label>
+            <input
+                id="email"
+                type="email"
+                x-model="email"
+                placeholder="your@email.com"
+                :disabled="loading"
+                style="
+                    width: 100%;
+                    padding: 0.75rem;
+                    border: 1px solid #2a3544;
+                    border-radius: 8px;
+                    background: #1a2330;
+                    color: inherit;
+                    font: inherit;
+                    box-sizing: border-box;
+                    margin-bottom: 0.75rem;
+                "
+            />
+            <button
+                type="button"
+                @click="send()"
+                :disabled="loading || !prompt.trim()"
+            >
+                <span x-text="loading ? 'Streaming…' : 'Send'"></span>
+            </button>
+
+            <p class="status" x-show="healthChecked">
+                <span x-text="healthMessage"></span>
+            </p>
+            <p class="error" x-show="error" x-text="error"></p>
+
+            <div class="output" x-show="response || loading">
+                <span x-text="response"></span><span x-show="loading">▌</span>
+            </div>
+        </main>
+
+        <script>
+            function chatApp() {
+                // Same origin as the page (works with localhost, 127.0.0.1, and port forwarding)
+                const hostUrl = window.location.origin;
+
+                return {
+                    hostUrl,
+                    prompt: "",
+                    email: "",
+                    response: "",
+                    loading: false,
+                    error: "",
+                    healthChecked: false,
+                    healthMessage: "",
+
+                    async checkHealth() {
+                        try {
+                            const res = await fetch(`${hostUrl}/api/health`);
+                            const data = await res.json();
+                            this.healthMessage = data.hasApiKey
+                                ? `Server is ready (model: ${data.model ?? "gemini-2.5-flash"}).`
+                                : "Server is running but GOOGLE_GENERATIVE_AI_API_KEY is missing in .env";
+                        } catch {
+                            this.healthMessage =
+                                "Cannot reach the local server. Run: npm run server";
+                        }
+                        this.healthChecked = true;
+                    },
+
+                    async send() {
+                        const text = this.prompt.trim();
+                        if (!text || this.loading) return;
+
+                        this.loading = true;
+                        this.error = "";
+                        this.response = "";
+
+                        try {
+                            const res = await fetch(`${hostUrl}/api/chat`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    prompt: text,
+                                    email: this.email.trim(),
+                                }),
+                            });
+
+                            const contentType =
+                                res.headers.get("content-type") ?? "";
+
+                            if (
+                                !res.ok ||
+                                contentType.includes("application/json")
+                            ) {
+                                const err = await res.json().catch(() => ({}));
+                                throw new Error(
+                                    err.error ||
+                                        `Request failed (${res.status})`,
+                                );
+                            }
+
+                            const reader = res.body.getReader();
+                            const decoder = new TextDecoder();
+
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) break;
+                                this.response += decoder.decode(value, {
+                                    stream: true,
+                                });
+                            }
+
+                            if (!this.response.trim()) {
+                                throw new Error(
+                                    "Empty response from server. Check the terminal for API errors (quota, model, or key).",
+                                );
+                            }
+                        } catch (e) {
+                            this.error =
+                                e.message || "Failed to stream response.";
+                        } finally {
+                            this.loading = false;
+                        }
+                    },
+                };
+            }
+        </script>
+    </body>
+</html>
